@@ -1,0 +1,40 @@
+{
+	"nodes":[
+		{"id":"a1b2c3d4e5f60001","type":"text","x":1600,"y":-260,"width":1200,"height":140,"text":"# 🧠 Toddynelson\n## Knowledge Operating System — Mapa do Vault\n\nCada bloco é uma pasta real do vault; os links abrem as notas existentes. Gerado a partir do estado atual do repositório em 2026-07-26."},
+		{"id":"a1b2c3d4e5f60002","type":"group","x":0,"y":-80,"width":3400,"height":1400,"label":"00 · System — Núcleo Operacional (ativo)","color":"6"},
+		{"id":"a1b2c3d4e5f60003","type":"text","x":40,"y":40,"width":1080,"height":380,"text":"## 📊 Dashboards\n\n- [[Dashboard - System]]\n- [[Dashboard - Work]]\n- [[Dashboard - Knowledge]]\n- [[Dashboard - Agents]]"},
+		{"id":"a1b2c3d4e5f60004","type":"text","x":1160,"y":40,"width":1080,"height":380,"text":"## 🔎 Dataview (Índices)\n\n- [[Dataview - Inbox Queue]]\n- [[Dataview - Knowledge Index]]\n- [[Dataview - Projects Index]]\n- [[Dataview - Decisions Log]]\n- [[Dataview - AI Agents Index]]"},
+		{"id":"a1b2c3d4e5f60005","type":"text","x":2280,"y":40,"width":1080,"height":380,"text":"## 🔌 MCP Contracts\n\n- [[MCP - Contract - Vault Reader]]\n- [[MCP - Contract - Vault Writer]]\n- [[MCP - Contract - Search Interface]]"},
+		{"id":"a1b2c3d4e5f60006","type":"text","x":40,"y":460,"width":1080,"height":380,"text":"## ⚙️ n8n Schemas\n\n- [[n8n - Schema - Inbox Ingest]]\n- [[n8n - Schema - Entity Create]]\n- [[n8n - Schema - Status Update]]"},
+		{"id":"a1b2c3d4e5f60007","type":"text","x":1160,"y":460,"width":1080,"height":380,"text":"## 📐 Standards\n\n- [[Standards - Tag Taxonomy]]\n- [[Standards - YAML Property Registry]]"},
+		{"id":"a1b2c3d4e5f60008","type":"text","x":2280,"y":460,"width":1080,"height":380,"text":"## 🤖 Agents\n\n- [[Agents - Role Registry]]\n- [[Agents - Communication Protocol]]\n- [[Agents - Memory Protocol]]"},
+		{"id":"a1b2c3d4e5f60009","type":"text","x":40,"y":880,"width":2200,"height":380,"text":"## 📄 Templates (19 modelos padronizados)\n\n[[Template - Agente IA]] · [[Template - Base]] · [[Template - Cliente]] · [[Template - Conceito]]\n[[Template - Curso]] · [[Template - Decisao]] · [[Template - Empresa]] · [[Template - Ferramenta]]\n[[Template - Framework]] · [[Template - Hipotese]] · [[Template - Integracao]] · [[Template - Livro]]\n[[Template - MCP]] · [[Template - Mercado]] · [[Template - Pesquisa]] · [[Template - Pessoa]]\n[[Template - Produto]] · [[Template - Projeto]] · [[Template - Workflow]]"},
+		{"id":"a1b2c3d4e5f6000a","type":"text","x":2280,"y":880,"width":1080,"height":380,"text":"## 🚧 Estrutura Planejada (ainda vazia)\n\n- Canvas/\n- MOCs/\n- Workflows/\n- Automation/\n- Integrations/\n- Scripts/\n- Properties/"},
+		{"id":"a1b2c3d4e5f6000b","type":"group","x":0,"y":1450,"width":500,"height":420,"label":"01 · Inbox","color":"2"},
+		{"id":"a1b2c3d4e5f6000c","type":"text","x":20,"y":1520,"width":460,"height":330,"text":"**Propósito:** captura de inputs brutos e notas não processadas.\n\nRecebe itens via [[n8n - Schema - Inbox Ingest]].\n\n🚧 Vazio — aguardando o primeiro item."},
+		{"id":"a1b2c3d4e5f6000d","type":"group","x":560,"y":1450,"width":500,"height":420,"label":"02 · Knowledge","color":"5"},
+		{"id":"a1b2c3d4e5f6000e","type":"text","x":580,"y":1520,"width":460,"height":330,"text":"**Propósito:** conhecimento evergreen — entidades e conceitos duráveis.\n\n**Subpastas:** AI, Books, Companies, Concepts, Courses, Frameworks, Markets, People, References, Research, Technologies, Tools\n\n🚧 Todas vazias — sem notas ainda."},
+		{"id":"a1b2c3d4e5f6000f","type":"group","x":1120,"y":1450,"width":500,"height":420,"label":"03 · Work","color":"4"},
+		{"id":"a1b2c3d4e5f60010","type":"text","x":1140,"y":1520,"width":460,"height":330,"text":"**Propósito:** projetos ativos, clientes e operação.\n\n**Subpastas:** Clients, Company OS, Content, Decisions, Experiments, Meetings, Products, Projects\n\n🚧 Todas vazias — sem notas ainda."},
+		{"id":"a1b2c3d4e5f60011","type":"group","x":1680,"y":1450,"width":500,"height":420,"label":"04 · Life","color":"3"},
+		{"id":"a1b2c3d4e5f60012","type":"text","x":1700,"y":1520,"width":460,"height":330,"text":"**Propósito:** vida pessoal — saúde, finanças, relações.\n\n**Subpastas:** Finance, Goals, Health, Journal, Relationships\n\n🚧 Todas vazias — sem notas ainda."},
+		{"id":"a1b2c3d4e5f60013","type":"group","x":2240,"y":1450,"width":500,"height":420,"label":"05 · Assets"},
+		{"id":"a1b2c3d4e5f60014","type":"text","x":2260,"y":1520,"width":460,"height":330,"text":"**Propósito:** arquivos estáticos referenciados por notas.\n\n**Subpastas:** Attachments, Audio, Images, PDFs, Video\n\n🚧 Todas vazias."},
+		{"id":"a1b2c3d4e5f60015","type":"group","x":2800,"y":1450,"width":500,"height":420,"label":"06 · Archive"},
+		{"id":"a1b2c3d4e5f60016","type":"text","x":2820,"y":1520,"width":460,"height":330,"text":"**Propósito:** registros históricos e entidades encerradas.\n\n🚧 Vazio — nada arquivado ainda."},
+		{"id":"a1b2c3d4e5f60017","type":"text","x":3480,"y":1450,"width":420,"height":420,"color":"1","text":"## 📁 Repositório Git (fora do vault)\n\nGovernança na raiz do repo — não aparece no grafo do Obsidian:\n\n- README.md\n- ROADMAP.md\n- TASKS.md\n- CONTRIBUTING.md\n- CHANGELOG.md\n- docs/architecture.md\n- docs/graph-model.md\n- docs/conventions.md\n- docs/automation.md"}
+	],
+	"edges":[
+		{"id":"b2c3d4e5f6a70001","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f6000b","toSide":"top","label":"define schemas"},
+		{"id":"b2c3d4e5f6a70002","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f6000d","toSide":"top","label":"governa"},
+		{"id":"b2c3d4e5f6a70003","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f6000f","toSide":"top","label":"governa"},
+		{"id":"b2c3d4e5f6a70004","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f60011","toSide":"top","label":"governa"},
+		{"id":"b2c3d4e5f6a70005","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f60013","toSide":"top","label":"governa"},
+		{"id":"b2c3d4e5f6a70006","fromNode":"a1b2c3d4e5f60002","fromSide":"bottom","toNode":"a1b2c3d4e5f60015","toSide":"top","label":"governa"},
+		{"id":"b2c3d4e5f6a70007","fromNode":"a1b2c3d4e5f6000b","fromSide":"right","toNode":"a1b2c3d4e5f6000d","toSide":"left","label":"n8n: Inbox Ingest"},
+		{"id":"b2c3d4e5f6a70008","fromNode":"a1b2c3d4e5f6000b","toNode":"a1b2c3d4e5f6000f","label":"n8n: Inbox Ingest","fromSide":"right","toSide":"left"},
+		{"id":"b2c3d4e5f6a70009","fromNode":"a1b2c3d4e5f6000b","toNode":"a1b2c3d4e5f60011","label":"n8n: Inbox Ingest","fromSide":"right","toSide":"left"},
+		{"id":"b2c3d4e5f6a7000a","fromNode":"a1b2c3d4e5f6000d","toNode":"a1b2c3d4e5f60015","label":"arquivamento","fromSide":"right","toSide":"left"},
+		{"id":"b2c3d4e5f6a7000b","fromNode":"a1b2c3d4e5f6000f","toNode":"a1b2c3d4e5f60015","label":"arquivamento","fromSide":"right","toSide":"left"}
+	]
+}

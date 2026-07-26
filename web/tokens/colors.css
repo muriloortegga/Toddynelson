@@ -1,0 +1,47 @@
+/* ============================================================
+   COLORS — Toddynelson
+   A strict monochrome system. Near-black ink on warm paper-gray.
+   No brand hue: contrast, weight and typography carry the design.
+   ============================================================ */
+
+:root {
+  /* --- Base ramp (ink → paper) --- */
+  --mo-ink:          #252422; /* near-black, primary text + UI */
+  --mo-ink-2:        #3d3d3b; /* dark gray, secondary ink */
+  --mo-gray-600:     #6b6b6b; /* muted text / captions */
+  --mo-gray-400:     #b5b4b0; /* mid gray */
+  --mo-border:       #bcbcbc; /* hairline borders */
+  --mo-gray-200:     #e8e7e3; /* light gray fills */
+  --mo-paper:        #f4f4f4; /* page background (cool paper) */
+  --mo-off-white:    #f5f4f0; /* warm off-white panel */
+  --mo-white:        #ffffff; /* cards / pure white */
+  --mo-black:        #000000; /* true black (rare, destructive) */
+
+  /* --- Semantic aliases --- */
+  --surface-page:    var(--mo-paper);
+  --surface-card:    var(--mo-white);
+  --surface-panel:   var(--mo-off-white);
+  --surface-inverse: var(--mo-ink);   /* dark sections */
+  --surface-fill:    var(--mo-gray-200);
+
+  --text-primary:    var(--mo-ink);
+  --text-secondary:  var(--mo-gray-600);
+  --text-muted:      var(--mo-gray-400);
+  --text-inverse:    var(--mo-white);
+  --text-on-inverse-muted: rgba(255, 255, 255, 0.5);
+  --text-on-inverse-subtle: rgba(255, 255, 255, 0.35);
+
+  --border-default:  var(--mo-border);
+  --border-strong:   var(--mo-ink);
+  --border-subtle:   rgba(37, 36, 34, 0.08); /* border/5–10 in source */
+  --border-inverse:  rgba(255, 255, 255, 0.12);
+
+  --interactive:           var(--mo-ink);
+  --interactive-foreground: var(--mo-white);
+  --ring:                  var(--mo-ink);
+
+  /* --- Translucent layers (glass header / overlays) --- */
+  --glass-bg:        rgba(244, 244, 244, 0.40);
+  --scrim-dark:      rgba(0, 0, 0, 0.60);
+  --scrim-ink:       rgba(37, 36, 34, 0.80);
+}

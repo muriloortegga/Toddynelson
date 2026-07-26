@@ -1,0 +1,14 @@
+{
+  "userIgnoreFilters": [],
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "01 - Inbox",
+  "useMarkdownLinks": false,
+  "showUnsupportedFiles": false,
+  "attachmentFolderPath": "05 - Assets/Attachments",
+  "newLinkFormat": "shortest",
+  "readableLineLength": true,
+  "strictLineBreaks": false,
+  "promptDelete": true,
+  "foldIndent": true
+}

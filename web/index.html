@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toddynelson — Vault</title>
+<link rel="stylesheet" href="./styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="tn-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tn-sidebar" id="sidebar">
+    <div class="tn-sidebar__brand">
+      <div class="tn-sidebar__mark">TN</div>
+      <span class="tn-sidebar__name">Toddynelson</span>
+    </div>
+
+    <nav class="tn-sidebar__nav" id="sidebarNav">
+      <button class="tn-nav-item" data-module="dashboard">
+        <i data-lucide="layout-dashboard" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Dashboard</span>
+      </button>
+      <button class="tn-nav-item" data-module="product">
+        <i data-lucide="layers" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Product</span>
+      </button>
+      <button class="tn-nav-item" data-module="ground-truth">
+        <i data-lucide="flask-conical" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Ground Truth</span>
+      </button>
+      <button class="tn-nav-item" data-module="projects">
+        <i data-lucide="folder-kanban" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Projects</span>
+      </button>
+      <button class="tn-nav-item" data-module="documents">
+        <i data-lucide="file-text" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Documents</span>
+      </button>
+      <button class="tn-nav-item" data-module="chat">
+        <i data-lucide="message-square" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Chat</span>
+      </button>
+
+      <div class="tn-sidebar__divider"></div>
+
+      <button class="tn-nav-item" data-module="settings">
+        <i data-lucide="settings" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Settings</span>
+      </button>
+    </nav>
+
+    <button class="tn-sidebar__collapse" id="collapseBtn" aria-label="Recolher menu">
+      <i data-lucide="panel-left-close" id="collapseIcon"></i>
+    </button>
+  </aside>
+
+  <!-- MAIN COLUMN -->
+  <div class="tn-main">
+
+    <!-- TOPBAR -->
+    <header class="tn-topbar">
+      <button class="tn-search" id="openPaletteBtn">
+        <i data-lucide="search"></i>
+        <span class="tn-search__placeholder">Buscar ou perguntar ao Vault…</span>
+        <i data-lucide="mic"></i>
+        <span class="tn-kbd">⌘K</span>
+      </button>
+      <div class="tn-topbar__spacer"></div>
+      <div class="tn-topbar__module" id="activeModuleLabel"></div>
+      <div class="tn-avatar">RM</div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="tn-content" id="content">
+
+      <!-- DASHBOARD -->
+      <section class="tn-module" id="module-dashboard">
+        <div class="tn-title">Boa tarde, Rafael.</div>
+        <div class="tn-subtitle">Aqui está o estado do seu Vault hoje.</div>
+
+        <div class="tn-grid-2-14">
+          <div class="tn-card">
+            <span class="tn-mono tn-mono--xs tn-mono--inverse">Sprint Atual</span>
+            <div id="sprintName" style="font-size:19px; font-weight:600; margin:10px 0 6px;"></div>
+            <div id="sprintPeriod" style="font-size:13px; color:rgba(255,255,255,.5); margin-bottom:16px;"></div>
+            <div class="tn-progress"><div class="tn-progress__bar" id="sprintProgressBar"></div></div>
+            <div style="margin-top:8px;"><span class="tn-mono tn-mono--sm tn-mono--secondary" id="sprintProgressLabel"></span></div>
+          </div>
+          <div class="tn-card" style="display:flex; flex-direction:column;">
+            <span class="tn-mono tn-mono--xs tn-mono--inverse">Próxima Tarefa</span>
+            <div id="nextTaskTitle" style="font-size:16px; font-weight:600; margin:10px 0 10px; flex:1;"></div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="nextTaskProject" style="font-size:12px; color:rgba(255,255,255,.5);"></span>
+              <span class="tn-tag" id="nextTaskPriority"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tn-grid-2">
+          <div class="tn-card">
+            <div class="tn-card__heading">Projetos Ativos</div>
+            <div id="dashProjects"></div>
+          </div>
+          <div class="tn-card">
+            <div class="tn-card__heading">Documentos Recentes</div>
+            <div id="dashDocuments"></div>
+          </div>
+        </div>
+
+        <div class="tn-grid-312">
+          <div class="tn-card">
+            <div class="tn-card__heading">Today's Focus</div>
+            <div id="focusItems"></div>
+          </div>
+          <div class="tn-card">
+            <div class="tn-card__heading">Quick Actions</div>
+            <div class="tn-quick-actions">
+              <button class="tn-btn tn-btn--block"><i data-lucide="plus"></i> Nova nota</button>
+              <button class="tn-btn tn-btn--block"><i data-lucide="check-square"></i> Nova tarefa</button>
+              <button class="tn-btn tn-btn--block"><i data-lucide="file-plus"></i> Novo documento</button>
+              <button class="tn-btn tn-btn--block" data-goto="chat"><i data-lucide="message-square"></i> Abrir chat</button>
+            </div>
+          </div>
+          <div class="tn-card">
+            <div class="tn-card__heading">Recent Activity</div>
+            <div class="tn-activity-feed" id="activityFeed"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCT -->
+      <section class="tn-module" id="module-product" hidden>
+        <div class="tn-title">Product</div>
+        <div class="tn-subtitle">Estratégia de produto do Toddynelson.</div>
+        <div class="tn-product-grid" id="productCards"></div>
+      </section>
+
+      <!-- GROUND TRUTH -->
+      <section class="tn-module" id="module-ground-truth" hidden>
+        <div class="tn-title">Ground Truth</div>
+        <div class="tn-subtitle">Evidência bruta: entrevistas, hipóteses e insights.</div>
+
+        <div class="tn-metrics-grid">
+          <div class="tn-card tn-metric-card">
+            <div class="tn-metric-value" id="gtInterviews"></div>
+            <span class="tn-mono tn-mono--xs tn-mono--secondary">Entrevistas</span>
+          </div>
+          <div class="tn-card tn-metric-card">
+            <div class="tn-metric-value" id="gtHypotheses"></div>
+            <span class="tn-mono tn-mono--xs tn-mono--secondary">Hipóteses testadas</span>
+          </div>
+          <div class="tn-card tn-metric-card">
+            <div class="tn-metric-value" id="gtValidationRate"></div>
+            <span class="tn-mono tn-mono--xs tn-mono--secondary">Taxa de validação</span>
+          </div>
+        </div>
+
+        <div class="tn-gt-grid">
+          <div class="tn-card">
+            <div class="tn-card__heading">Entrevistas</div>
+            <div id="interviewsList"></div>
+          </div>
+          <div class="tn-gt-col">
+            <div class="tn-card">
+              <div class="tn-card__heading">Hipóteses</div>
+              <div id="hypothesesList"></div>
+            </div>
+            <div class="tn-card">
+              <div class="tn-card__heading">Insights</div>
+              <div id="insightsList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="tn-module" id="module-projects" hidden>
+        <div class="tn-title">Projects</div>
+        <div class="tn-subtitle">Frentes ativas do Toddynelson.</div>
+        <div class="tn-project-list" id="projectsList"></div>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section class="tn-module" id="module-documents" hidden>
+        <div class="tn-title">Documents</div>
+        <div class="tn-subtitle">Biblioteca do Vault.</div>
+
+        <div class="tn-doc-toolbar">
+          <button class="tn-pill is-active" data-cat="all">Todos</button>
+          <button class="tn-pill" data-cat="knowledge">Knowledge</button>
+          <button class="tn-pill" data-cat="work">Work</button>
+          <button class="tn-pill" data-cat="system">System</button>
+          <div class="tn-doc-toolbar__spacer"></div>
+          <input class="tn-textfield tn-doc-search" id="docSearchInput" placeholder="Buscar documento…">
+          <div class="tn-view-toggle">
+            <button class="tn-icon-btn is-active" id="viewGridBtn" aria-label="Grade"><i data-lucide="layout-grid"></i></button>
+            <button class="tn-icon-btn" id="viewListBtn" aria-label="Lista"><i data-lucide="list"></i></button>
+          </div>
+        </div>
+
+        <div class="tn-doc-grid" id="docGrid"></div>
+        <div class="tn-doc-list" id="docList" hidden></div>
+      </section>
+
+      <!-- CHAT -->
+      <section class="tn-module" id="module-chat" hidden>
+        <div class="tn-chat">
+          <div class="tn-title">Chat</div>
+          <div class="tn-subtitle">Converse com o Vault. Nenhuma IA está conectada neste protótipo.</div>
+          <div class="tn-chat__messages" id="chatMessages"></div>
+          <div class="tn-chat__chips" id="suggestionChips"></div>
+          <div class="tn-chat__input-row">
+            <input class="tn-textfield tn-chat__input" id="chatInput" placeholder="Pergunte algo ao Vault…">
+            <button class="tn-icon-btn" id="chatMicBtn" aria-label="Comando por voz" style="width:40px; height:40px;"><i data-lucide="mic"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="tn-module" id="module-settings" hidden>
+        <div class="tn-settings">
+          <div class="tn-title" style="margin-bottom:24px;">Settings</div>
+
+          <div class="tn-card tn-settings-profile">
+            <div class="tn-settings-avatar">RM</div>
+            <div style="flex:1;">
+              <div class="tn-settings-name">Rafael Mendes</div>
+              <div class="tn-settings-role">Founder &amp; Operador · Toddynelson</div>
+            </div>
+          </div>
+
+          <div class="tn-card tn-settings-card">
+            <div class="tn-card__heading">Preferências</div>
+            <div class="tn-pref-row">
+              <span class="tn-pref-label">Idioma</span>
+              <span class="tn-pref-value">Português (Brasil)</span>
+            </div>
+            <div class="tn-pref-row">
+              <span class="tn-pref-label">Notificações por e-mail</span>
+              <div class="tn-toggle is-on"><div class="tn-toggle__knob"></div></div>
+            </div>
+            <div class="tn-pref-row">
+              <span class="tn-pref-label">Notificações push</span>
+              <div class="tn-toggle is-off"><div class="tn-toggle__knob"></div></div>
+            </div>
+          </div>
+
+          <div class="tn-card tn-settings-card">
+            <div class="tn-card__heading">Tema</div>
+            <div class="tn-theme-row">
+              <div class="tn-theme-card tn-theme-card--active">
+                <div class="tn-theme-card__title">Escuro</div>
+                <div class="tn-theme-card__status">Ativo</div>
+              </div>
+              <div class="tn-theme-card tn-theme-card--disabled">
+                <div class="tn-theme-card__title">Claro</div>
+                <div class="tn-theme-card__status">Indisponível</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tn-card">
+            <div class="tn-card__heading">Integrações</div>
+            <div class="tn-integrations-grid" id="integrationsGrid"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- COMMAND PALETTE -->
+  <div class="tn-palette-overlay" id="paletteOverlay" hidden>
+    <div class="tn-palette" id="paletteBox">
+      <div class="tn-palette__input-row">
+        <i data-lucide="command"></i>
+        <input class="tn-palette__input" id="paletteInput" placeholder="Digite um comando ou busque…">
+        <span class="tn-kbd">ESC</span>
+      </div>
+      <div class="tn-palette__results" id="paletteResults"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>

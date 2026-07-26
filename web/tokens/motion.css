@@ -1,0 +1,29 @@
+/* ============================================================
+   MOTION — Toddynelson
+   Confident, expo-eased transitions. Things glide and settle;
+   nothing bounces. Hover = lift + opacity; reveals = fade-up.
+   ============================================================ */
+
+:root {
+  /* --- Easing --- */
+  --ease-out:        cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo:cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* --- Durations --- */
+  --dur-fast:   250ms;
+  --dur-mid:    500ms;
+  --dur-slow:   650ms;
+  --dur-slower: 700ms;
+}
+
+/* --- Keyframes --- */
+@keyframes tn-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tn-scale-in {
+  from { opacity: 0; transform: scale(.97); }
+  to   { opacity: 1; transform: scale(1); }
+}

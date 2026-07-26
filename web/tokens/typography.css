@@ -1,0 +1,48 @@
+/* ============================================================
+   TYPOGRAPHY — Toddynelson
+   Two families. Tight tracking on headings, generous leading
+   on body. Mono is always uppercase with wide tracking.
+   ============================================================ */
+
+:root {
+  /* --- Families --- */
+  --font-sans: 'DM Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'Courier New', monospace;
+
+  /* --- Weights --- */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-bold:    700;
+
+  /* --- Fluid display scale --- */
+  --text-display:   clamp(2.5rem, 6vw, 5rem);
+  --text-h1:        clamp(2rem, 3.5vw, 4rem);
+  --text-h2:        clamp(1.8rem, 2.8vw, 2.8rem);
+  --text-h3:        clamp(1.5rem, 2.2vw, 2.2rem);
+  --text-h4:        clamp(1.1rem, 1.4vw, 1.4rem);
+  --text-h5:        1rem;
+
+  /* --- Body / fixed sizes --- */
+  --text-lead:      1.25rem;
+  --text-body:      1rem;
+  --text-body-sm:   0.9375rem;
+  --text-small:     0.875rem;
+  --text-mono:      0.75rem;
+  --text-mono-xs:   0.5625rem;
+
+  /* --- Tracking --- */
+  --tracking-tighter: -0.02em;
+  --tracking-tight:   -0.01em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.05em;
+  --tracking-mono:    0.1em;
+  --tracking-widest:  0.3em;
+
+  /* --- Leading --- */
+  --leading-none:  1.0;
+  --leading-tight: 1.1;
+  --leading-snug:  1.3;
+  --leading-body:  1.6;
+  --leading-loose: 1.7;
+}
