@@ -18,6 +18,10 @@
     </div>
 
     <nav class="tn-sidebar__nav" id="sidebarNav">
+      <button class="tn-nav-item" data-module="graph">
+        <i data-lucide="brain" class="tn-nav-item__icon"></i>
+        <span class="tn-nav-item__label">Cérebro</span>
+      </button>
       <button class="tn-nav-item" data-module="dashboard">
         <i data-lucide="layout-dashboard" class="tn-nav-item__icon"></i>
         <span class="tn-nav-item__label">Dashboard</span>
@@ -75,8 +79,24 @@
     <!-- CONTENT -->
     <main class="tn-content" id="content">
 
+      <!-- CÉREBRO DO TODDY (GRAPH) -->
+      <section class="tn-module" id="module-graph">
+        <div class="tn-graph-header">
+          <div>
+            <div class="tn-title">O Cérebro do Toddy</div>
+            <div class="tn-subtitle">Clique num setor para expandir. Clique em "Toddy" para recolher tudo.</div>
+          </div>
+          <button class="tn-btn" id="graphResetBtn"><i data-lucide="rotate-ccw"></i> Recolher tudo</button>
+        </div>
+
+        <div class="tn-graph-stage" id="graphStage">
+          <svg id="graphSvg" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa do Vault"></svg>
+          <div class="tn-graph-panel" id="graphPanel" hidden></div>
+        </div>
+      </section>
+
       <!-- DASHBOARD -->
-      <section class="tn-module" id="module-dashboard">
+      <section class="tn-module" id="module-dashboard" hidden>
         <div class="tn-title">Boa tarde, Rafael.</div>
         <div class="tn-subtitle">Aqui está o estado do seu Vault hoje.</div>
 

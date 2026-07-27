@@ -336,6 +336,65 @@ input::placeholder { color: rgba(255, 255, 255, .32); }
 .tn-textfield:focus { border-color: rgba(255, 255, 255, .4); }
 
 /* ============================================================
+   GRAPH / CÉREBRO DO TODDY
+   ============================================================ */
+.tn-graph-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.tn-graph-header .tn-title { margin-bottom: 4px; }
+.tn-graph-header .tn-subtitle { margin-bottom: 0; }
+
+.tn-graph-stage {
+  position: relative;
+  height: min(72vh, 720px);
+  min-height: 460px;
+  background: color-mix(in srgb, var(--mo-ink), white 3%);
+  border: 1px solid var(--border-inverse);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.tn-graph-stage svg { width: 100%; height: 100%; display: block; }
+
+.tn-graph-edge { stroke: rgba(255, 255, 255, .14); stroke-width: 1.25; }
+
+.tn-graph-node { cursor: pointer; transition: transform var(--dur-mid) var(--ease-out-expo), opacity var(--dur-mid) var(--ease-out-expo); }
+.tn-graph-node__circle { fill: color-mix(in srgb, var(--mo-ink), white 10%); stroke: var(--border-inverse); stroke-width: 1.25; transition: fill var(--dur-fast) var(--ease-out-expo), stroke var(--dur-fast) var(--ease-out-expo); }
+.tn-graph-node__glyph { fill: rgba(255, 255, 255, .75); font-family: var(--font-mono); font-size: 14px; pointer-events: none; }
+.tn-graph-node__label { fill: rgba(255, 255, 255, .65); font-family: var(--font-sans); font-size: 12px; pointer-events: none; }
+
+.tn-graph-node:hover .tn-graph-node__circle { stroke: rgba(255, 255, 255, .5); }
+.tn-graph-node.is-selected .tn-graph-node__circle { stroke: var(--mo-white); stroke-width: 2; }
+
+.tn-graph-node.has-children .tn-graph-node__circle { stroke-dasharray: 3 3; }
+.tn-graph-node.has-children.is-expanded .tn-graph-node__circle { fill: color-mix(in srgb, var(--mo-ink), white 18%); stroke: rgba(255, 255, 255, .55); stroke-dasharray: none; }
+
+.tn-graph-node--depth-0 .tn-graph-node__circle { fill: var(--mo-white); stroke: none; }
+.tn-graph-node--depth-0 .tn-graph-node__glyph { fill: var(--mo-ink); font-weight: 700; font-size: 12px; letter-spacing: 0.05em; }
+.tn-graph-node--depth-0 .tn-graph-node__label { display: none; }
+
+.tn-graph-node--depth-1 .tn-graph-node__label { font-size: 12.5px; fill: rgba(255, 255, 255, .8); font-weight: 500; }
+.tn-graph-node--depth-2 .tn-graph-node__label,
+.tn-graph-node--depth-3 .tn-graph-node__label { font-size: 10.5px; fill: rgba(255, 255, 255, .5); }
+.tn-graph-node.is-leaf .tn-graph-node__circle { fill: color-mix(in srgb, var(--mo-ink), white 8%); }
+
+.tn-graph-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 280px;
+  max-width: calc(100% - 40px);
+  background: color-mix(in srgb, var(--mo-ink), white 8%);
+  border: 1px solid var(--border-inverse);
+  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-lg);
+  animation: tn-scale-in 180ms var(--ease-out-expo) both;
+}
+.tn-graph-panel[hidden] { display: none; }
+.tn-graph-panel__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.tn-graph-panel__title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.tn-graph-panel__desc { font-size: 12.5px; line-height: 1.5; color: rgba(255, 255, 255, .6); margin-bottom: 12px; }
+.tn-graph-panel__meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
+/* ============================================================
    DASHBOARD
    ============================================================ */
 .tn-grid-2-14 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 16px; }

@@ -5,7 +5,7 @@
      DATA
      ============================================================ */
   const navLabels = {
-    dashboard: 'Dashboard', product: 'Product', 'ground-truth': 'Ground Truth',
+    graph: 'Cérebro do Toddy', dashboard: 'Dashboard', product: 'Product', 'ground-truth': 'Ground Truth',
     projects: 'Projects', documents: 'Documents', chat: 'Chat', settings: 'Settings',
   };
 
@@ -94,6 +94,7 @@
   ];
 
   const commandsBase = [
+    { id: 'graph', label: 'Ir para Cérebro do Toddy', icon: 'brain', type: 'Navegação' },
     { id: 'dashboard', label: 'Ir para Dashboard', icon: 'layout-dashboard', type: 'Navegação' },
     { id: 'product', label: 'Ir para Product', icon: 'layers', type: 'Navegação' },
     { id: 'ground-truth', label: 'Ir para Ground Truth', icon: 'flask-conical', type: 'Navegação' },
@@ -124,28 +125,386 @@
   };
 
   /* ============================================================
+     GRAPH DATA — a simple root, expanding into sectors, then
+     into the items already modeled above. Nothing is invented:
+     this is a navigable tree over the same mock data.
+     ============================================================ */
+  const graphTree = {
+    id: 'root',
+    label: 'Toddy',
+    module: null,
+    children: [
+      {
+        id: 'sector-product',
+        label: 'Product',
+        module: 'product',
+        meta: { desc: 'Estratégia de produto do Toddynelson.' },
+        children: productCards.map((c, i) => ({
+          id: `product-${i}`,
+          label: c.title,
+          module: 'product',
+          meta: { desc: c.desc, status: c.status, updated: c.updated },
+        })),
+      },
+      {
+        id: 'sector-ground-truth',
+        label: 'Ground Truth',
+        module: 'ground-truth',
+        meta: { desc: 'Evidência bruta: entrevistas, hipóteses e insights.' },
+        children: [
+          {
+            id: 'gt-interviews',
+            label: 'Entrevistas',
+            module: 'ground-truth',
+            meta: { desc: `${interviews.length} entrevistas registradas.` },
+            children: interviews.map((it, i) => ({
+              id: `interview-${i}`,
+              label: it.name,
+              module: 'ground-truth',
+              meta: { desc: it.tags, date: it.date },
+            })),
+          },
+          {
+            id: 'gt-hypotheses',
+            label: 'Hipóteses',
+            module: 'ground-truth',
+            meta: { desc: `${hypothesesRaw.length} hipóteses testadas.` },
+            children: hypothesesRaw.map((h, i) => ({
+              id: `hyp-${i}`,
+              label: h.text,
+              module: 'ground-truth',
+              meta: { desc: h.text, status: h.status },
+            })),
+          },
+          {
+            id: 'gt-insights',
+            label: 'Insights',
+            module: 'ground-truth',
+            meta: { desc: `${insights.length} insights extraídos.` },
+            children: insights.map((ins, i) => ({
+              id: `insight-${i}`,
+              label: ins.text,
+              module: 'ground-truth',
+              meta: { desc: ins.text, source: ins.source },
+            })),
+          },
+        ],
+      },
+      {
+        id: 'sector-projects',
+        label: 'Projects',
+        module: 'projects',
+        meta: { desc: 'Frentes ativas do Toddynelson.' },
+        children: projects.map((p, i) => ({
+          id: `project-${i}`,
+          label: p.name,
+          module: 'projects',
+          meta: { desc: p.desc, status: p.status, progress: p.progress, updated: p.lastActivity },
+        })),
+      },
+      {
+        id: 'sector-documents',
+        label: 'Documents',
+        module: 'documents',
+        meta: { desc: 'Biblioteca do Vault.' },
+        children: ['Knowledge', 'Work', 'System'].map((cat) => ({
+          id: `doc-cat-${cat}`,
+          label: cat,
+          module: 'documents',
+          filter: { docCategory: cat.toLowerCase() },
+          meta: { desc: `Documentos de ${cat}.` },
+          children: documents
+            .filter((d) => d.category === cat)
+            .map((d, i) => ({
+              id: `doc-${cat}-${i}`,
+              label: d.title,
+              module: 'documents',
+              filter: { docCategory: cat.toLowerCase() },
+              meta: { desc: d.type, updated: d.updated },
+            })),
+        })),
+      },
+      {
+        id: 'sector-chat',
+        label: 'Chat',
+        module: 'chat',
+        meta: { desc: 'Converse com o Vault.' },
+        children: [],
+      },
+    ],
+  };
+
+  /* ============================================================
      STATE
      ============================================================ */
   const state = {
-    activeModule: 'dashboard',
+    activeModule: 'graph',
     sidebarExpanded: true,
     paletteOpen: false,
     paletteQuery: '',
     docCategory: 'all',
     docSearch: '',
     viewMode: 'grid',
+    graphExpanded: new Set(),
+    graphSelected: null,
   };
 
   /* ============================================================
      DOM HELPERS
      ============================================================ */
   const $ = (id) => document.getElementById(id);
+  const svgNS = 'http://www.w3.org/2000/svg';
   const escapeHtml = (str) => String(str).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
 
   function refreshIcons() {
     if (window.lucide) window.lucide.createIcons();
+  }
+
+  /* ============================================================
+     RENDER: GRAPH (CÉREBRO DO TODDY)
+     Radial expand/collapse tree. The root and its direct sectors
+     are always visible (the "simple" state); clicking a sector
+     reveals its children, keeping deeper layers hidden until
+     they're clicked too.
+     ============================================================ */
+  const graphNodeEls = new Map();
+  const graphEdgeEls = new Map();
+  let graphPositions = new Map();
+
+  function truncateLabel(label, depth) {
+    const max = depth <= 1 ? 22 : depth === 2 ? 18 : 15;
+    if (label.length <= max) return label;
+    return label.slice(0, max - 1).trimEnd() + '…';
+  }
+
+  function nodeInnerSVG(node, depth) {
+    const hasChildren = !!(node.children && node.children.length);
+    const expanded = state.graphExpanded.has(node.id);
+    const r = depth === 0 ? 44 : depth === 1 ? 32 : depth === 2 ? 22 : 16;
+    const labelY = r + 15;
+    let glyph = '';
+    if (depth === 0) glyph = 'TODDY';
+    else if (hasChildren) glyph = expanded ? '−' : '+';
+    return `
+      <circle class="tn-graph-node__circle" r="${r}"></circle>
+      ${glyph ? `<text class="tn-graph-node__glyph" text-anchor="middle" dy="${depth === 0 ? 5 : 6}">${escapeHtml(glyph)}</text>` : ''}
+      <text class="tn-graph-node__label" text-anchor="middle" y="${labelY}">${escapeHtml(truncateLabel(node.label, depth))}</text>
+      <title>${escapeHtml(node.label)}</title>
+    `;
+  }
+
+  function computeGraphLayout() {
+    const positions = new Map();
+    const CX = 500, CY = 400;
+    const R1 = 190, R2 = 150, R3 = 115;
+
+    function place(node, x, y, dirDeg, depth, parentId) {
+      positions.set(node.id, { node, x, y, depth, parentId });
+      const kids = node.children || [];
+      if (!kids.length) return;
+
+      if (depth === 0) {
+        const n = kids.length;
+        kids.forEach((child, i) => {
+          const angle = (360 / n) * i - 90;
+          const rad = (angle * Math.PI) / 180;
+          place(child, x + R1 * Math.cos(rad), y + R1 * Math.sin(rad), angle, 1, node.id);
+        });
+        return;
+      }
+
+      if (!state.graphExpanded.has(node.id)) return;
+
+      const radius = depth === 1 ? R2 : R3;
+      const spread = depth === 1
+        ? Math.min(Math.max(kids.length * 30, 50), 160)
+        : Math.min(Math.max(kids.length * 22, 36), 130);
+
+      kids.forEach((child, i) => {
+        const a = kids.length > 1 ? dirDeg - spread / 2 + (spread * i) / (kids.length - 1) : dirDeg;
+        const rad = (a * Math.PI) / 180;
+        place(child, x + radius * Math.cos(rad), y + radius * Math.sin(rad), dirDeg, depth + 1, node.id);
+      });
+    }
+
+    place(graphTree, CX, CY, 0, 0, null);
+    return positions;
+  }
+
+  function renderGraphSVG() {
+    const svg = $('graphSvg');
+    if (!svg) return;
+
+    let edgeLayer = svg.querySelector('.tn-graph-edges');
+    if (!edgeLayer) {
+      edgeLayer = document.createElementNS(svgNS, 'g');
+      edgeLayer.setAttribute('class', 'tn-graph-edges');
+      svg.appendChild(edgeLayer);
+    }
+    let nodeLayer = svg.querySelector('.tn-graph-nodes');
+    if (!nodeLayer) {
+      nodeLayer = document.createElementNS(svgNS, 'g');
+      nodeLayer.setAttribute('class', 'tn-graph-nodes');
+      svg.appendChild(nodeLayer);
+    }
+
+    const positions = computeGraphLayout();
+    graphPositions = positions;
+
+    const seenNodeIds = new Set();
+    const seenEdgeKeys = new Set();
+
+    positions.forEach((pos, id) => {
+      seenNodeIds.add(id);
+
+      if (pos.parentId) {
+        const parentPos = positions.get(pos.parentId);
+        const key = `${pos.parentId}>${id}`;
+        seenEdgeKeys.add(key);
+        let line = graphEdgeEls.get(key);
+        if (!line) {
+          line = document.createElementNS(svgNS, 'line');
+          line.setAttribute('class', 'tn-graph-edge');
+          line.setAttribute('x1', parentPos.x);
+          line.setAttribute('y1', parentPos.y);
+          line.setAttribute('x2', pos.x);
+          line.setAttribute('y2', pos.y);
+          edgeLayer.appendChild(line);
+          graphEdgeEls.set(key, line);
+        } else {
+          line.setAttribute('x1', parentPos.x);
+          line.setAttribute('y1', parentPos.y);
+          line.setAttribute('x2', pos.x);
+          line.setAttribute('y2', pos.y);
+        }
+      }
+
+      let g = graphNodeEls.get(id);
+      if (!g) {
+        g = document.createElementNS(svgNS, 'g');
+        g.dataset.id = id;
+        const startPos = pos.parentId && positions.get(pos.parentId) ? positions.get(pos.parentId) : pos;
+        g.setAttribute('transform', `translate(${startPos.x},${startPos.y})`);
+        g.style.opacity = '0';
+        g.innerHTML = nodeInnerSVG(pos.node, pos.depth);
+        g.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onGraphNodeClick(pos.node);
+        });
+        nodeLayer.appendChild(g);
+        graphNodeEls.set(id, g);
+        requestAnimationFrame(() => {
+          g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
+          g.style.opacity = '1';
+        });
+      } else {
+        g.setAttribute('transform', `translate(${pos.x},${pos.y})`);
+        g.innerHTML = nodeInnerSVG(pos.node, pos.depth);
+      }
+
+      const hasChildren = !!(pos.node.children && pos.node.children.length);
+      g.setAttribute('class', [
+        'tn-graph-node',
+        `tn-graph-node--depth-${pos.depth}`,
+        hasChildren ? 'has-children' : 'is-leaf',
+        state.graphExpanded.has(id) ? 'is-expanded' : '',
+        state.graphSelected === id ? 'is-selected' : '',
+      ].filter(Boolean).join(' '));
+    });
+
+    graphNodeEls.forEach((el, id) => {
+      if (!seenNodeIds.has(id)) {
+        el.style.transition = 'opacity 200ms ease';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 200);
+        graphNodeEls.delete(id);
+      }
+    });
+    graphEdgeEls.forEach((el, key) => {
+      if (!seenEdgeKeys.has(key)) {
+        el.remove();
+        graphEdgeEls.delete(key);
+      }
+    });
+
+    renderGraphPanel();
+  }
+
+  function collapseDescendants(node) {
+    (node.children || []).forEach((child) => {
+      state.graphExpanded.delete(child.id);
+      collapseDescendants(child);
+    });
+  }
+
+  function onGraphNodeClick(node) {
+    if (node.id === 'root') {
+      state.graphExpanded.clear();
+      state.graphSelected = null;
+      renderGraphSVG();
+      return;
+    }
+    state.graphSelected = node.id;
+    const hasChildren = !!(node.children && node.children.length);
+    if (hasChildren) {
+      if (state.graphExpanded.has(node.id)) {
+        state.graphExpanded.delete(node.id);
+        collapseDescendants(node);
+      } else {
+        state.graphExpanded.add(node.id);
+      }
+    }
+    renderGraphSVG();
+  }
+
+  function renderGraphPanel() {
+    const panel = $('graphPanel');
+    if (!panel) return;
+    const id = state.graphSelected;
+    const pos = id ? graphPositions.get(id) : null;
+    if (!pos) {
+      panel.hidden = true;
+      return;
+    }
+    const node = pos.node;
+    const meta = node.meta || {};
+    const hasChildren = !!(node.children && node.children.length);
+
+    panel.hidden = false;
+    panel.innerHTML = `
+      <div class="tn-graph-panel__head">
+        <span class="tn-mono tn-mono--xs tn-mono--secondary">${hasChildren ? 'Setor' : 'Item'}</span>
+        <button class="tn-icon-btn" id="graphPanelClose" aria-label="Fechar"><i data-lucide="x"></i></button>
+      </div>
+      <div class="tn-graph-panel__title">${escapeHtml(node.label)}</div>
+      ${meta.desc ? `<div class="tn-graph-panel__desc">${escapeHtml(meta.desc)}</div>` : ''}
+      <div class="tn-graph-panel__meta">
+        ${meta.status ? `<span class="tn-tag">${escapeHtml(meta.status)}</span>` : ''}
+        ${typeof meta.progress === 'number' ? `<span class="tn-mono tn-mono--xs tn-mono--muted">${meta.progress}%</span>` : ''}
+        ${meta.date ? `<span class="tn-mono tn-mono--xs tn-mono--muted">${escapeHtml(meta.date)}</span>` : ''}
+        ${meta.updated ? `<span class="tn-mono tn-mono--xs tn-mono--muted">${escapeHtml(meta.updated)}</span>` : ''}
+        ${meta.source ? `<span class="tn-mono tn-mono--xs tn-mono--muted">${escapeHtml(meta.source)}</span>` : ''}
+      </div>
+      ${node.module ? `<button class="tn-btn tn-btn--block" id="graphPanelOpen"><i data-lucide="arrow-up-right"></i> Abrir em ${escapeHtml(navLabels[node.module] || node.module)}</button>` : ''}
+    `;
+    refreshIcons();
+
+    $('graphPanelClose').addEventListener('click', () => {
+      state.graphSelected = null;
+      renderGraphSVG();
+    });
+    const openBtn = $('graphPanelOpen');
+    if (openBtn) {
+      openBtn.addEventListener('click', () => {
+        if (node.filter && node.filter.docCategory) {
+          state.docCategory = node.filter.docCategory;
+          renderDocuments();
+        }
+        setModule(node.module);
+      });
+    }
   }
 
   /* ============================================================
@@ -432,6 +791,18 @@
      EVENT WIRING
      ============================================================ */
   function wireEvents() {
+    $('graphResetBtn').addEventListener('click', () => {
+      state.graphExpanded.clear();
+      state.graphSelected = null;
+      renderGraphSVG();
+    });
+    $('graphSvg').addEventListener('click', (e) => {
+      if (e.target === $('graphSvg')) {
+        state.graphSelected = null;
+        renderGraphSVG();
+      }
+    });
+
     document.querySelectorAll('.tn-nav-item').forEach((el) => {
       el.addEventListener('click', () => setModule(el.dataset.module));
     });
@@ -501,6 +872,7 @@
      ============================================================ */
   function init() {
     renderSidebar();
+    renderGraphSVG();
     renderDashboard();
     renderProduct();
     renderGroundTruth();
